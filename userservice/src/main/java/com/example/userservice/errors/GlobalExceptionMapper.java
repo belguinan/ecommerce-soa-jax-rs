@@ -6,8 +6,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 
+@Slf4j
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
 
@@ -25,6 +28,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
         if (exception instanceof IllegalArgumentException) {
             return buildErrorResponse(exception.getMessage(), 400);
         }
+
+        log.error(exception.getMessage(), exception);
 
         return buildErrorResponse("Internal server error", 500);
     }
