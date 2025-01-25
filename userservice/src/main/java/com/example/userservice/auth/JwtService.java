@@ -21,9 +21,6 @@ public class JwtService {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final RedisTemplate<String, Object> redisTemplate;
 
-    /**
-     * @param redisTemplate
-     */
     public JwtService(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -41,17 +38,8 @@ public class JwtService {
                 .signWith(key)
                 .compact();
 
-        Map<String, Object> userInfo = new HashMap<>();
-
-        userInfo.put("userId", user.getId());
-        userInfo.put("username", user.getUsername());
-        userInfo.put("email", user.getEmail());
-        userInfo.put("phoneNumber", user.getPhoneNumber());
-        userInfo.put("address", user.getAddress());
-        userInfo.put("city", user.getCity());
-
         String redisKey = TOKEN_PREFIX + token;
-        redisTemplate.opsForValue().set(redisKey, userInfo, EXPIRATION_TIME, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(redisKey, user.getId().toString(), EXPIRATION_TIME, TimeUnit.SECONDS);
 
         return token;
     }

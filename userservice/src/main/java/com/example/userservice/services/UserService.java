@@ -1,11 +1,13 @@
 package com.example.userservice.services;
 
 import com.example.userservice.auth.AuthContext;
+import com.example.userservice.auth.JerseyRequestContextFilter;
 import com.example.userservice.auth.JwtService;
 import com.example.userservice.contracts.UserServiceContract;
 import com.example.userservice.database.entities.User;
 import com.example.userservice.database.repositories.UserRepository;
 import com.example.userservice.requests.LoginRequest;
+import jakarta.ws.rs.core.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,14 @@ public class UserService implements UserServiceContract {
         return this.userRepository.findByUsername(loginRequest.getUsername())
             .filter(user -> this.passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             .map(this.jwtService::generateToken);
+    }
+
+    public boolean logout() {
+        var requestContext = JerseyRequestContextFilter.getCurrentContext();
+        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring("Bearer ".length()).trim();
+        this.jwtService.invalidateToken(token);
+        return true;
     }
 
     @Override

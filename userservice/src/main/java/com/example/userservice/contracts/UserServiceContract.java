@@ -13,5 +13,7 @@ public interface UserServiceContract {
 
     public Optional<String> login(LoginRequest loginRequest);
 
+    public boolean logout();
+
     public User update(User user);
 }

@@ -34,6 +34,12 @@ public class UserResource implements UserResourceContract {
     }
 
     @Override
+    public Response logout() {
+        this.userService.logout();
+        return Response.ok().build();
+    }
+
+    @Override
     public Response update(User user) {
         return Response.ok(this.userService.update(user)).build();
     }

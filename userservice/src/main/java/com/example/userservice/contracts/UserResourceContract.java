@@ -20,6 +20,11 @@ public interface UserResourceContract {
     @Path("/login")
     Response login(LoginRequest loginRequest);
 
+    @POST
+    @Path("/logout")
+    @Authenticated
+    Response logout();
+
     @PUT
     @Path("/profile")
     @Authenticated
