@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Slf4j
@@ -50,10 +51,16 @@ public class UserService implements UserServiceContract {
     }
 
     @Override
-    public Optional<String> login(LoginRequest loginRequest) {
+    public Optional<HashMap> login(LoginRequest loginRequest) {
         return this.userRepository.findByUsername(loginRequest.getUsername())
             .filter(user -> this.passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
-            .map(this.jwtService::generateToken);
+            .map(user -> {
+                String token = this.jwtService.generateToken(user);
+                return new HashMap<String, Object>() {{
+                    put("token", token);
+                    put("user", user);
+                }};
+            });
     }
 
     public boolean logout() {

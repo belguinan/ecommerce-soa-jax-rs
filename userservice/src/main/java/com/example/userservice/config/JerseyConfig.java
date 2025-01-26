@@ -1,6 +1,7 @@
 package com.example.userservice.config;
 
 import com.example.userservice.auth.AuthContext;
+import com.example.userservice.auth.CorsFilter;
 import com.example.userservice.auth.JerseyRequestContextFilter;
 import com.example.userservice.errors.GlobalExceptionMapper;
 import com.example.userservice.errors.ValidationExceptionMapper;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @ApplicationPath("/api/v1")
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
+        this.register(CorsFilter.class);
         this.register(UserResource.class);
         this.register(AuthenticationFilter.class);
         this.register(ValidationExceptionMapper.class);

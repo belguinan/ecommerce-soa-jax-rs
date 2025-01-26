@@ -1,6 +1,7 @@
 package com.example.productservice.config;
 
 import com.example.productservice.auth.AuthContext;
+import com.example.productservice.auth.CorsFilter;
 import com.example.productservice.auth.JerseyRequestContextFilter;
 import com.example.productservice.errors.GlobalExceptionMapper;
 import com.example.productservice.errors.ValidationExceptionMapper;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @ApplicationPath("/api/v1")
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
+        this.register(CorsFilter.class);
         this.register(ProductResource.class);
         this.register(AuthenticationFilter.class);
         this.register(ValidationExceptionMapper.class);

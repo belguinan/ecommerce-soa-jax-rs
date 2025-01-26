@@ -3,6 +3,7 @@ package com.example.userservice.contracts;
 import com.example.userservice.database.entities.User;
 import com.example.userservice.requests.LoginRequest;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public interface UserServiceContract {
@@ -22,7 +23,7 @@ public interface UserServiceContract {
      * @param loginRequest
      * @return Optional<String>
      */
-    public Optional<String> login(LoginRequest loginRequest);
+    public Optional<HashMap> login(LoginRequest loginRequest);
 
     /**
      * @return boolean

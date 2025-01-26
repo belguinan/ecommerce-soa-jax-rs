@@ -25,12 +25,7 @@ public class UserResource implements UserResourceContract {
 
     @Override
     public Response login(LoginRequest loginRequest) {
-        String token = this.userService.login(loginRequest).orElseThrow();
-        return Response.ok(
-            new HashMap<String, Object>() {{
-                put("token", token);
-            }}
-        ).build();
+        return Response.ok(this.userService.login(loginRequest).orElseThrow()).build();
     }
 
     @Override
