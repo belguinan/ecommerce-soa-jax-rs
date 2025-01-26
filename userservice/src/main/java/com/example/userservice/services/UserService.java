@@ -68,10 +68,16 @@ public class UserService implements UserServiceContract {
     public User update(User user) {
         User dbUser = this.userRepository.findById(this.authContext.getCurrentUserId()).orElseThrow();
 
+        // Fillable columns
+        dbUser.setName(user.getName());
+        dbUser.setAddress(user.getAddress());
+        dbUser.setPhoneNumber(user.getPhoneNumber());
+        dbUser.setCity(user.getCity());
+        dbUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
         // Prevent user from updating it's username and email.
         dbUser.setUsername(dbUser.getUsername());
         dbUser.setEmail(dbUser.getEmail());
-        dbUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         return this.userRepository.save(dbUser);
     }
