@@ -1,0 +1,35 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "optimize-css": "purgecss --config purgecss.config.js --output dist/assets/"
+  },
+  "dependencies": {
+    "@liripeng/vue-audio-player": "^2.0.4",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "highlight.js": "^11.11.1",
+    "sweetalert2": "^11.15.10",
+    "typed.js": "^2.1.0",
+    "vue": "^3.5.13",
+    "vue-3-mask": "^0.0.1-alpha",
+    "vue-router": "^4.5.0",
+    "vue-sweetalert2": "^5.0.11"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@fullhuman/vue-cli-plugin-purgecss": "^7.0.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "laravel-echo": "^1.17.1",
+    "postcss": "^8.4.49",
+    "purgecss": "^7.0.2",
+    "pusher-js": "^8.4.0-rc2",
+    "sass": "^1.83.1",
+    "vite": "^6.0.5"
+  }
+}
