@@ -32,21 +32,6 @@ public class ProductResource implements ProductResourceContract {
 
         return Response.ok(this.productService.index(params, filterRequest)).build();
     }
-//
-//    @Override
-//    public Response sellerProducts(
-//        int page,
-//        int perPage,
-//        String sortBy,
-//        String sortOrder,
-//        String type
-//    ) {
-//        PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
-//
-//        FilterRequest filterRequest = new FilterRequest(type);
-//
-//        return Response.ok(this.productService.sellerProducts(params, filterRequest)).build();
-//    }
 
     @Override
     public Response store(Product product) {
@@ -56,6 +41,11 @@ public class ProductResource implements ProductResourceContract {
     @Override
     public Response update(Long id, Product product) {
         return Response.ok(this.productService.update(id, product)).build();
+    }
+
+    @Override
+    public Response show(Long id) {
+        return Response.ok(this.productService.show(id)).build();
     }
 
     @Override

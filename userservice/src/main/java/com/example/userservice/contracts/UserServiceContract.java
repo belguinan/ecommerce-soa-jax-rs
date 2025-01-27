@@ -26,13 +26,18 @@ public interface UserServiceContract {
     public Optional<HashMap> login(LoginRequest loginRequest);
 
     /**
+     * @param user
+     * @return User
+     */
+    public User update(User user);
+
+    /**
      * @return boolean
      */
     public boolean logout();
 
     /**
-     * @param user
-     * @return User
+     * @return boolean
      */
-    public User update(User user);
+    public boolean isLoggedIn();
 }

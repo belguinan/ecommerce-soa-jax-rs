@@ -21,6 +21,12 @@ public interface ProductServiceContract {
 
     /**
      * @param id
+     * @return Product
+     */
+    public Product show(Long id);
+
+    /**
+     * @param id
      * @param product
      * @return Product
      */

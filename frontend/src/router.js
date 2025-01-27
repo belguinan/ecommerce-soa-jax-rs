@@ -15,8 +15,45 @@ const routes = [
                     title: 'Home'
                 }
             },
+
+            {
+                path: '/profile',
+                name: 'profile.edit',
+                component: () => import('@/views/Profile/Edit.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'Edit Profile'
+                }
+            },
         ]
     },
+
+    {
+        path: '/product',
+        component: () => import('@/layouts/CustomerLayout.vue'),
+        children: [
+            {
+                path: '',
+                name: 'product.create',
+                component: () => import('@/views/Product/Form.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'Create product'
+                }
+            },
+            {
+                path: ':id',
+                name: 'product.edit',
+                component: () => import('@/views/Product/Form.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'Edit product'
+                }
+            },
+        ]
+    },
+
+
     {
         path: '/',
         component: () => import('@/layouts/GuestLayout.vue'),

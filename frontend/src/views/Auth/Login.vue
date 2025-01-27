@@ -1,4 +1,3 @@
-<!-- src/views/Auth/Login.vue -->
 <script setup>
 import {onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
@@ -37,7 +36,6 @@ const handleLogin = async () => {
         });
 
         if (response.token) {
-            console.log(response);
             setLocalStorage('token', response.token);
             setLocalStorage('user', response.user);
             router.push({ name: 'home' });

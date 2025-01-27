@@ -63,14 +63,6 @@ public class UserService implements UserServiceContract {
             });
     }
 
-    public boolean logout() {
-        var requestContext = JerseyRequestContextFilter.getCurrentContext();
-        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        String token = authHeader.substring("Bearer ".length()).trim();
-        this.jwtService.invalidateToken(token);
-        return true;
-    }
-
     @Override
     public User update(User user) {
         User dbUser = this.userRepository.findById(this.authContext.getCurrentUserId()).orElseThrow();
@@ -80,12 +72,34 @@ public class UserService implements UserServiceContract {
         dbUser.setAddress(user.getAddress());
         dbUser.setPhoneNumber(user.getPhoneNumber());
         dbUser.setCity(user.getCity());
-        dbUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+        // Password is optional
+        if (user.getPassword() != null) {
+            dbUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        }
 
         // Prevent user from updating it's username and email.
         dbUser.setUsername(dbUser.getUsername());
         dbUser.setEmail(dbUser.getEmail());
 
         return this.userRepository.save(dbUser);
+    }
+
+    @Override
+    public boolean logout() {
+        var requestContext = JerseyRequestContextFilter.getCurrentContext();
+        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring("Bearer ".length()).trim();
+        this.jwtService.invalidateToken(token);
+        return true;
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        var requestContext = JerseyRequestContextFilter.getCurrentContext();
+        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring("Bearer ".length()).trim();
+        this.jwtService.validateToken(token);
+        return true;
     }
 }

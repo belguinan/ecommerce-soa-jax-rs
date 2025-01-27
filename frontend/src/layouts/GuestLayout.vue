@@ -1,4 +1,3 @@
-<!-- src/layouts/GuestLayout.vue -->
 <template>
     <div class="container-fluid h-100 align-items-center justify-content-center transition-all bg-white">
         <div class="row h-100">

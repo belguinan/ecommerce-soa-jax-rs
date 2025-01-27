@@ -25,6 +25,11 @@ public interface UserResourceContract {
     @Authenticated
     Response logout();
 
+    @POST
+    @Path("/is-logged-in")
+    @Authenticated
+    Response isLoggedIn();
+
     @PUT
     @Path("/profile")
     @Authenticated

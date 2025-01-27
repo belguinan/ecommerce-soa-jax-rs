@@ -7,7 +7,9 @@ import './assets/sass/app.scss';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-import { Dropdown } from 'bootstrap/js/index.esm.js'
+import { Dropdown, Modal } from 'bootstrap/js/index.esm.js'
+
+window.Modal = Modal;
 
 const app = createApp(App);
 

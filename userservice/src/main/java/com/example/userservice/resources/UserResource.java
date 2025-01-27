@@ -30,8 +30,12 @@ public class UserResource implements UserResourceContract {
 
     @Override
     public Response logout() {
-        this.userService.logout();
-        return Response.ok().build();
+        return Response.ok(this.userService.logout()).build();
+    }
+
+    @Override
+    public Response isLoggedIn() {
+        return Response.ok(this.userService.isLoggedIn()).build();
     }
 
     @Override
@@ -41,13 +45,6 @@ public class UserResource implements UserResourceContract {
 
     @Override
     public Response show() {
-        try {
-            return Response.ok(this.userService.show()).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-
-        return Response.ok().build();
+        return Response.ok(this.userService.show()).build();
     }
 }

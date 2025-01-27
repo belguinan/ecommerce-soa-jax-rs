@@ -53,20 +53,27 @@ public class ProductService implements ProductServiceContract {
     }
 
     @Override
+    public Product show(Long id) {
+        return this.productRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
     public Product update(Long id, Product product) {
         Product dbProduct = this.productRepository
-                .findBySellerIdAndId(id, this.authContext.getCurrentUserId())
+                .findBySellerIdAndId(this.authContext.getCurrentUserId(), id)
                 .orElseThrow(() -> new NotFoundException());
 
         product.setId(dbProduct.getId());
         product.setSellerId(dbProduct.getSellerId());
+
         return this.productRepository.save(product);
     }
 
     @Override
     public boolean destroy(Long id) {
+
         Product dbProduct = this.productRepository
-                .findBySellerIdAndId(id, this.authContext.getCurrentUserId())
+                .findBySellerIdAndId(this.authContext.getCurrentUserId(), id)
                 .orElseThrow();
 
         this.productRepository.delete(dbProduct);

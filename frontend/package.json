@@ -12,6 +12,7 @@
     "@liripeng/vue-audio-player": "^2.0.4",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "highlight.js": "^11.11.1",
     "sweetalert2": "^11.15.10",
     "typed.js": "^2.1.0",

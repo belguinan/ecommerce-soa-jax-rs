@@ -1,0 +1,1 @@
+export const PRODUCT_TYPES = ['Any', 'Electronics', 'Clothing', 'Books', 'Home'];
