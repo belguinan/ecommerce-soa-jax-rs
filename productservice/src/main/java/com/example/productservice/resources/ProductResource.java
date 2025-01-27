@@ -4,7 +4,7 @@ import com.example.productservice.contracts.ProductResourceContract;
 import com.example.productservice.contracts.ProductServiceContract;
 import com.example.productservice.database.entities.Product;
 import com.example.productservice.pagination.PaginationParams;
-import com.example.productservice.requests.LoginRequest;
+import com.example.productservice.requests.FilterRequest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
@@ -22,22 +22,31 @@ public class ProductResource implements ProductResourceContract {
         int page,
         int perPage,
         String sortBy,
-        String sortOrder
+        String sortOrder,
+        String type,
+        String sellerId
     ) {
         PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
-        return Response.ok(this.productService.index(params)).build();
-    }
 
-    @Override
-    public Response sellerProducts(
-        int page,
-        int perPage,
-        String sortBy,
-        String sortOrder
-    ) {
-        PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
-        return Response.ok(this.productService.sellerProducts(params)).build();
+        FilterRequest filterRequest = new FilterRequest(type, sellerId);
+
+        return Response.ok(this.productService.index(params, filterRequest)).build();
     }
+//
+//    @Override
+//    public Response sellerProducts(
+//        int page,
+//        int perPage,
+//        String sortBy,
+//        String sortOrder,
+//        String type
+//    ) {
+//        PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
+//
+//        FilterRequest filterRequest = new FilterRequest(type);
+//
+//        return Response.ok(this.productService.sellerProducts(params, filterRequest)).build();
+//    }
 
     @Override
     public Response store(Product product) {

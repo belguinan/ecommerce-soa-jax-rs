@@ -5,9 +5,11 @@ import com.example.productservice.auth.JwtService;
 import com.example.productservice.contracts.ProductServiceContract;
 import com.example.productservice.database.entities.Product;
 import com.example.productservice.database.repositories.ProductRepository;
+import com.example.productservice.helpers.SpecificationFactory;
 import com.example.productservice.pagination.Page;
 import com.example.productservice.pagination.PaginationFactory;
 import com.example.productservice.pagination.PaginationParams;
+import com.example.productservice.requests.FilterRequest;
 import jakarta.ws.rs.NotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -31,15 +33,15 @@ public class ProductService implements ProductServiceContract {
     }
 
     @Override
-    public Page<Product> index(PaginationParams params) {
+    public Page<Product> index(PaginationParams params, FilterRequest filterRequest) {
         PaginationFactory<Product> paginationFactory = new PaginationFactory<>(this.productRepository);
-        return paginationFactory.create(params);
-    }
 
-    @Override
-    public Page<Product> sellerProducts(PaginationParams params) {
-        PaginationFactory<Product> paginationFactory = new PaginationFactory<>(this.productRepository);
-        Specification<Product> specification = (root, query, builder) -> builder.equal(root.get("sellerId"), this.authContext.getCurrentUserId());
+        // Do not allow customer to filter by other seller ids.
+        if (filterRequest.getSellerId() != null) {
+            filterRequest.setSellerId(String.valueOf(this.authContext.getCurrentUserId()));
+        }
+
+        Specification<Product> specification = SpecificationFactory.create(filterRequest);
 
         return paginationFactory.create(params, specification);
     }

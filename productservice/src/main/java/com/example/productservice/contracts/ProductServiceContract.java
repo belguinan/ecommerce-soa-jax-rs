@@ -3,6 +3,7 @@ package com.example.productservice.contracts;
 import com.example.productservice.database.entities.Product;
 import com.example.productservice.pagination.Page;
 import com.example.productservice.pagination.PaginationParams;
+import com.example.productservice.requests.FilterRequest;
 
 public interface ProductServiceContract {
 
@@ -10,14 +11,7 @@ public interface ProductServiceContract {
      * @param params
      * @return Page<Product>
      */
-    public Page<Product> index(PaginationParams params);
-
-    /**
-     * @param params
-     * @param sellerId
-     * @return Page<Product>
-     */
-    public Page<Product> sellerProducts(PaginationParams params);
+    public Page<Product> index(PaginationParams params, FilterRequest filterRequest);
 
     /**
      * @param product

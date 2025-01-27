@@ -20,16 +20,9 @@ public interface ProductResourceContract {
         @QueryParam("page") @DefaultValue("1") int page,
         @QueryParam("perPage") @DefaultValue("15") int perPage,
         @QueryParam("sortBy") @DefaultValue("id") @Pattern(regexp = "^(id|price|quantity)$", message = "Invalid sort by param.") String sortBy,
-        @QueryParam("sortOrder") @DefaultValue("DESC") String sortOrder
-    );
-
-    @GET
-    @Path("/self")
-    Response sellerProducts(
-        @QueryParam("page") @DefaultValue("1") int page,
-        @QueryParam("perPage") @DefaultValue("15") int perPage,
-        @QueryParam("sortBy") @DefaultValue("id") @Pattern(regexp = "^(id|price|quantity)$", message = "Invalid sort by param.") String sortBy,
-        @QueryParam("sortOrder") @DefaultValue("DESC") String sortOrder
+        @QueryParam("sortOrder") @DefaultValue("DESC") String sortOrder,
+        @QueryParam("type") String type,
+        @QueryParam("sellerId") String sellerId
     );
 
     @POST
