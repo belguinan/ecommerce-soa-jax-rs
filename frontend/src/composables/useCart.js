@@ -1,61 +1,124 @@
 import { ref, computed } from 'vue'
-import {useSwal} from "@/composables/useSwal";
+import { cartApiEndpoint } from '@/assets/js/helpers'
+import { useFetch } from '@/composables/useFetch'
 
 const cartItems = ref([])
 const showCartModal = ref(false)
+const { fetchJson } = useFetch()
 
 export function useCart() {
     const cartItemCount = computed(() => {
         return cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
     })
 
-    function loadCart() {
-        const savedCart = localStorage.getItem('cart')
-        if (savedCart) {
-            cartItems.value = JSON.parse(savedCart)
+    async function loadCart() {
+        try {
+            const response = await fetchJson(cartApiEndpoint(''), {
+                method: 'GET'
+            })
+            
+            if (response.items) {
+                cartItems.value = response.items.map(item => ({
+                    id: item.id,
+                    productId: item.product.id,
+                    name: item.product.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    stock: item.product.stock,
+                    total: item.total
+                }))
+            }
+        } catch (error) {
+            console.error('Failed to load cart:', error)
+            cartItems.value = []
         }
     }
 
     async function addToCart(product) {
-        const existingItem = cartItems.value.find(item => item.id === product.id)
-        let action = '';
-
-        if (existingItem && existingItem.quantity < product.stock) {
-            existingItem.quantity++
-            action = 'update'
-        } else if (!existingItem) {
-            action = 'store'
-            cartItems.value.push({
-                ...product,
-                quantity: 1
+        try {
+            const response = await fetchJson(cartApiEndpoint(product.id), {
+                method: 'POST',
+                body: {
+                    productId: product.id,
+                    quantity: 1,
+                    price: product.price
+                }
             })
+            
+            if (response.items) {
+                cartItems.value = response.items.map(item => ({
+                    id: item.id,
+                    productId: item.product.id,
+                    name: item.product.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    stock: item.product.stock,
+                    total: item.total
+                }))
+            }
 
-            if (! showCartModal.value) {
+            if (!showCartModal.value) {
                 showCartModal.value = true
             }
-        }
 
-        localStorage.setItem('cart', JSON.stringify(cartItems.value))
-
-        return action;
-    }
-
-    function updateCartItemQuantity(productId, quantity) {
-        const item = cartItems.value.find(item => item.id === productId)
-        if (item) {
-            item.quantity = quantity
-            localStorage.setItem('cart', JSON.stringify(cartItems.value))
+            return 'store'
+        } catch (error) {
+            console.error('Failed to add to cart:', error)
+            throw error
         }
     }
 
-    function removeFromCart(productId) {
-        cartItems.value = cartItems.value.filter(item => item.id !== productId)
-        localStorage.setItem('cart', JSON.stringify(cartItems.value))
+    async function updateCartItemQuantity(itemId, quantity) {
+        try {
+            const response = await fetchJson(cartApiEndpoint(itemId), {
+                method: 'PUT',
+                body: { quantity }
+            })
+            
+            if (response.items) {
+                cartItems.value = response.items.map(item => ({
+                    id: item.id,
+                    productId: item.product.id,
+                    name: item.product.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    stock: item.product.stock,
+                    total: item.total
+                }))
+            }
+        } catch (error) {
+            console.error('Failed to update cart:', error)
+            throw error
+        }
+    }
+
+    async function removeFromCart(itemId) {
+        try {
+            const response = await fetchJson(cartApiEndpoint(itemId), {
+                method: 'DELETE'
+            })
+
+            if (response.items) {
+                cartItems.value = response.items.map(item => ({
+                    id: item.id,
+                    productId: item.product.id,
+                    name: item.product.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    stock: item.product.stock,
+                    total: item.total
+                }))
+            } else {
+                cartItems.value = []
+            }
+        } catch (error) {
+            console.error('Failed to remove from cart:', error)
+            throw error
+        }
     }
 
     function clearCart() {
         cartItems.value = []
-        localStorage.removeItem('cart')
     }
 
     return {

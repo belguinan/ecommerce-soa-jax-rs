@@ -1,8 +1,8 @@
-package com.example.productservice.database.entities;
+package com.example.cartservice.database.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,43 +13,33 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(
-    name = "products",
-    indexes = {
-        @Index(name = "idx_products_seller_id", columnList = "sellerId"),
-        @Index(name = "idx_products_seller_id_status", columnList = "sellerId,type")
-    }
-)
-public class Product {
+@Table(name = "order_items")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private Long sellerId;
+    private Long orderId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @NotNull
-    @NotEmpty
-    private String type;
+    private Long userId;
 
     @NotNull
-    @NotEmpty
-    private String name;
-
-    @NotNull
-    @NotEmpty
-    private String reference;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Min(1)
+    private Integer quantity;
 
     @NotNull
     @DecimalMin(value = "0.0")
     private BigDecimal price;
 
     @NotNull
-    @Column(columnDefinition = "integer default 0")
-    private Integer stock;
+    @DecimalMin(value = "0.0")
+    private BigDecimal total;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -58,4 +48,12 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    @PreUpdate
+    public void calculateTotal() {
+        this.total = this.price != null && this.quantity != null
+            ? this.price.multiply(BigDecimal.valueOf(this.quantity))
+            : BigDecimal.ZERO;
+    }
 }

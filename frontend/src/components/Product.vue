@@ -30,6 +30,8 @@ function handleAddToCart() {
         if (action === 'update') {
             successAlert(`Product quantity updated successfully.`);
         }
+    }).catch(err => {
+        errorAlert("Something went wrong!")
     });
 }
 

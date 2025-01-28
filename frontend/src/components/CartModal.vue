@@ -2,8 +2,8 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { formatPrice } from '@/assets/js/helpers'
 import { useCart } from '@/composables/useCart'
-import { orderApiEndpoint } from '@/assets/js/helpers';
-import {useSwal} from "@/composables/useSwal";
+import { useSwal } from "@/composables/useSwal";
+import { useFetch } from "@/composables/useFetch";
 
 const { 
     cartItems, 
@@ -11,6 +11,8 @@ const {
     updateCartItemQuantity, 
     removeFromCart 
 } = useCart()
+
+const { errorAlert } = useSwal()
 
 const modal = ref(null)
 let bsModal = null
@@ -25,27 +27,17 @@ const { confirm } = useSwal()
 
 function handleQuantityUpdate(item, newQuantity) {
     if (newQuantity < 1 || newQuantity > item.stock) return
-    updateCartItemQuantity(item.id, newQuantity)
+    updateCartItemQuantity(item.id, newQuantity).catch(err => {
+        errorAlert("Something went wrong!")
+    })
 }
 
 function handleRemoveItem(itemId) {
-
     return confirm('Are you sure you want to remove this item?', {
         icon: "warning"
     }).then(result => {
         if (result.isConfirmed) {
-
             removeFromCart(itemId)
-
-            // fetchJson(orderApiEndpoint(`/${user.id}`), {
-            //     method: "DELETE",
-            // }).then(result => {
-            //     successAlert("Product deleted successfully.").then(() => {
-            //         emit("delete");
-            //     });
-            // }).catch(error => {
-            //     errorAlert("Something went wrong");
-            // })
         }
     })
 }
@@ -66,6 +58,8 @@ onMounted(() => {
         modal.value.addEventListener('hidden.bs.modal', () => {
             showCartModal.value = false
         })
+
+        getCart();
     } catch (e) {}
 })
 
@@ -108,6 +102,7 @@ onUnmounted(() => {
                                  :key="item.id"
                                  class="list-group-item bg-body p-4"
                             >
+
                                 <div class="d-flex w-100 justify-content-between mb-3">
                                     <h6 class="mb-0 fw-semibold text-capitalize">{{ item.name }}</h6>
                                     <div class="d-flex gap-3 align-items-start">
@@ -167,13 +162,11 @@ onUnmounted(() => {
                     >
                         Continue Shopping
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        @click="handleCheckout"
-                    >
+
+                    <router-link :to="{name: 'checkout.index'}" class="btn btn-primary" @click="showCartModal = false">
                         Checkout
-                    </button>
+                    </router-link>
+                    
                 </div>
             </div>
         </div>

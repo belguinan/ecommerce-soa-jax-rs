@@ -1,15 +1,18 @@
 export const userApiEndpoint = (endpoint) => {
     const url = import.meta.env.VITE_USER_API_ENDPOINT;
+    endpoint = String(endpoint);
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 
 export const productApiEndpoint = (endpoint) => {
     const url = import.meta.env.VITE_PRODUCT_API_ENDPOINT;
+    endpoint = String(endpoint);
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 
-export const orderApiEndpoint = (endpoint) => {
-    const url = import.meta.env.VITE_ORDER_API_ENDPOINT;
+export const cartApiEndpoint = (endpoint) => {
+    const url = import.meta.env.VITE_CART_API_ENDPOINT;
+    endpoint = String(endpoint);
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 

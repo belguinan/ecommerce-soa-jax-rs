@@ -58,6 +58,22 @@ const routes = [
 
     {
         path: '/',
+        component: () => import('@/layouts/CustomerLayout.vue'),
+        children: [
+            {
+                path: '/checkout',
+                name: 'checkout.index',
+                component: () => import('@/views/Checkout/Index.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'Checkout'
+                }
+            },
+        ]
+    },
+
+    {
+        path: '/',
         component: () => import('@/layouts/GuestLayout.vue'),
         children: [
             {

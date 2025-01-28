@@ -1,4 +1,4 @@
-package com.example.productservice.database.entities;
+package com.example.cartservice.database.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -13,24 +13,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(
-    name = "products",
-    indexes = {
-        @Index(name = "idx_products_seller_id", columnList = "sellerId"),
-        @Index(name = "idx_products_seller_id_status", columnList = "sellerId,type")
-    }
-)
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    private Long sellerId;
-
-    @NotNull
-    @NotEmpty
-    private String type;
 
     @NotNull
     @NotEmpty
@@ -38,7 +25,7 @@ public class Product {
 
     @NotNull
     @NotEmpty
-    private String reference;
+    private String type;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -48,14 +35,11 @@ public class Product {
     private BigDecimal price;
 
     @NotNull
-    @Column(columnDefinition = "integer default 0")
     private Integer stock;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

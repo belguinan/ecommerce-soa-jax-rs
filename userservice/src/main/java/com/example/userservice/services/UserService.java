@@ -56,10 +56,12 @@ public class UserService implements UserServiceContract {
             .filter(user -> this.passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             .map(user -> {
                 String token = this.jwtService.generateToken(user);
-                return new HashMap<String, Object>() {{
-                    put("token", token);
-                    put("user", user);
-                }};
+
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("token", token);
+                result.put("user", user);
+
+                return result;
             });
     }
 
