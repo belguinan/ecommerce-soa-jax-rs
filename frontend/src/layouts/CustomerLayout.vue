@@ -15,31 +15,31 @@ isLoggedIn().then(res => {
     if (! res) {
         handleLogout()
     }
-})
+}).catch(error => handleLogout())
 
 async function handleLogout() {
-    const endpoint = userApiEndpoint('logout')
-    await fetchJson(endpoint, { method: 'POST' })
+    try {
+        const endpoint = userApiEndpoint('logout')
+        await fetchJson(endpoint, { method: 'POST' })
+    } catch (e) {}
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('cart')
     router.push({ name: 'login' })
 }
 
-async function isLoggedIn() {
-    try {
+function isLoggedIn() {
+    return new Promise((resolve, reject) => {
         const endpoint = userApiEndpoint('is-logged-in');
-        const response = await fetchJson(endpoint, {
+        fetchJson(endpoint, {
             method: 'POST',
-        });
-        if (response.status === 401) {
-            return false;
-        }
-        return true;
-    } catch (err) {
-        console.error(err);
-        return false;
-    }
+        }).then(response => {
+            if (response.status === 401) {
+                reject(false)
+            }
+            resolve(true)
+        }).catch(() => reject(false));
+    })
 }
 
 onMounted(() => {

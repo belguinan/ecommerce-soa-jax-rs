@@ -5,6 +5,7 @@ import { useFetch } from '@/composables/useFetch';
 import { productApiEndpoint, getLocalStorage } from '@/assets/js/helpers';
 import Pagination from '@/components/Pagination.vue';
 import Product from '@/components/Product.vue';
+import router from "@/router";
 const { fetchJson } = useFetch();
 
 const products = ref([]);
@@ -71,6 +72,10 @@ function handleSortChange(field) {
     }
 
     fetchProducts();
+}
+
+function handleViewProduct(product) {
+    router.push({name: 'product.show', params: {id: product.id}});
 }
 
 onMounted(() => {
@@ -167,7 +172,7 @@ onMounted(() => {
             </div>
 
             <div v-if="loading" class="d-flex justify-content-center py-5">
-                <div class="spinner-border" role="status">
+                <div class="spinner-border">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
@@ -181,6 +186,7 @@ onMounted(() => {
                         <Product
                             :product="product"
                             @delete="products.splice(index, 1);"
+                            @view="handleViewProduct(product)"
                         />
                     </div>
                 </div>

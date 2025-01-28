@@ -17,7 +17,7 @@ const props = defineProps({
 
 const { fetchJson } = useFetch();
 const { errorAlert, successAlert, confirm } = useSwal();
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['delete', 'view']);
 
 const isUserProduct = user.id == props.product.sellerId;
 
@@ -50,6 +50,7 @@ function handleDelete() {
         }
     })
 }
+
 </script>
 
 <template>
@@ -65,18 +66,25 @@ function handleDelete() {
             <div class="d-flex gap-2">
                 <button
                     @click.stop="handleDelete"
-                    class="btn btn-dark w-50px h-50px rounded-circle shadow-sm"
+                    class="btn btn-dark p-0 d-flex align-items-center justify-content-center w-40px h-40px rounded-circle shadow-sm"
                 >
                     <i class="bi bi-trash"></i>
                 </button>
 
-                <router-link class="btn btn-dark w-50px h-50px rounded-circle shadow-sm" :to="{ name: 'product.edit', params: {id: product.id} }">
+                <router-link class="btn btn-dark p-0 d-flex align-items-center justify-content-center w-40px h-40px rounded-circle shadow-sm" :to="{ name: 'product.edit', params: {id: product.id} }">
                     <i class="bi bi-pencil"></i>
+                </router-link>
+
+                <router-link class="btn btn-dark p-0 d-flex align-items-center justify-content-center w-40px h-40px rounded-circle shadow-sm" :to="{ name: 'product.show', params: {id: product.id} }">
+                    <i class="bi bi-eye"></i>
                 </router-link>
             </div>
         </div>
         
-        <div class="bg-light d-flex align-items-center justify-content-center h-250px position-relative product-image">
+        <div
+            class="bg-light d-flex align-items-center justify-content-center h-250px position-relative product-image cursor-pointer"
+            @click.stop="emit('view', product)"
+        >
             <div class="text-secondary">
                 <i class="bi bi-image display-4"></i>
             </div>
@@ -107,16 +115,17 @@ function handleDelete() {
                         Out of stock
                     </span>
                 </div>
-                <button 
-                    v-if="!isUserProduct" 
-                    class="btn bg-dark text-white border-0 btn-sm rounded-3 py-2 px-3"
-                    @click.stop="handleAddToCart"
-                    :disabled="product.stock === 0"
-                >
-                    <i class="bi bi-cart-plus me-2"></i>
-                    Add to Cart
-                </button>
-                <button 
+                <div class="btn-group" v-if="!isUserProduct">
+                    <button
+                        class="btn btn-dark btn-sm rounded-3 py-2 px-3"
+                        @click.stop="handleAddToCart(product)"
+                        :disabled="product.stock === 0"
+                    >
+                        <i class="bi bi-cart-plus me-2"></i>
+                        Add to Cart
+                    </button>
+                </div>
+                <button
                     v-else 
                     class="btn btn-light border btn-sm rounded-3 px-3"
                     disabled

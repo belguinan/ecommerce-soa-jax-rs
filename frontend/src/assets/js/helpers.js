@@ -8,6 +8,11 @@ export const productApiEndpoint = (endpoint) => {
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 
+export const orderApiEndpoint = (endpoint) => {
+    const url = import.meta.env.VITE_ORDER_API_ENDPOINT;
+    return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
+}
+
 export const setLocalStorage = (key, value) => {
     localStorage.setItem(key, JSON.stringify(value));
 }

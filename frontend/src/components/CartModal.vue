@@ -2,6 +2,8 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { formatPrice } from '@/assets/js/helpers'
 import { useCart } from '@/composables/useCart'
+import { orderApiEndpoint } from '@/assets/js/helpers';
+import {useSwal} from "@/composables/useSwal";
 
 const { 
     cartItems, 
@@ -19,13 +21,33 @@ const total = computed(() => {
     }, 0)
 })
 
+const { confirm } = useSwal()
+
 function handleQuantityUpdate(item, newQuantity) {
     if (newQuantity < 1 || newQuantity > item.stock) return
     updateCartItemQuantity(item.id, newQuantity)
 }
 
 function handleRemoveItem(itemId) {
-    removeFromCart(itemId)
+
+    return confirm('Are you sure you want to remove this item?', {
+        icon: "warning"
+    }).then(result => {
+        if (result.isConfirmed) {
+
+            removeFromCart(itemId)
+
+            // fetchJson(orderApiEndpoint(`/${user.id}`), {
+            //     method: "DELETE",
+            // }).then(result => {
+            //     successAlert("Product deleted successfully.").then(() => {
+            //         emit("delete");
+            //     });
+            // }).catch(error => {
+            //     errorAlert("Something went wrong");
+            // })
+        }
+    })
 }
 
 function handleCheckout() {
@@ -55,9 +77,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="modal fade" tabindex="-1" ref="modal">
-        <div class="modal-dialog modal-dialog-centered max-w-500px">
-            <div class="modal-content bg-white">
+    <div class="modal fade" tabindex="-1" ref="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered max-w-600px">
+            <div class="modal-content bg-white rounded-4 p-2">
                 <div class="modal-header border-bottom-0">
                     <h5 class="modal-title">
                         <span v-if="cartItems.length > 0">
@@ -74,17 +96,17 @@ onUnmounted(() => {
                 </div>
 
                 <div class="modal-body p-0">
-                    <!-- Empty Cart State -->
+
                     <div v-if="cartItems.length === 0" class="text-center p-4">
                         <i class="bi bi-cart-x display-4"></i>
                         <p class="mt-3 mb-0">Your cart is empty</p>
                     </div>
 
                     <div class="p-3">
-                        <div class="list-group">
+                        <div class="list-group rounded-4">
                             <div v-for="item in cartItems"
                                  :key="item.id"
-                                 class="list-group-item bg-body p-3"
+                                 class="list-group-item bg-body p-4"
                             >
                                 <div class="d-flex w-100 justify-content-between mb-3">
                                     <h6 class="mb-0 fw-semibold text-capitalize">{{ item.name }}</h6>
@@ -130,8 +152,8 @@ onUnmounted(() => {
 
                     <div v-if="cartItems.length > 0" class="p-3">
                         <div class="d-flex justify-content-end align-items-center">
-                            <h5 class="mb-0 fw-semibold">
-                                Total: <span class="fw-bold">{{ formatPrice(total) }}</span>
+                            <h5 class="mb-0 px-3 py-2 bg-body border rounded-3">
+                                <span class="fw-semibold">Total:</span> <span class="fw-bold">{{ formatPrice(total) }}</span>
                             </h5>
                         </div>
                     </div>
