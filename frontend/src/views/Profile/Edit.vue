@@ -151,7 +151,7 @@ onMounted(() => {
     <div class="container py-4 min-vh-100">
 
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-8">
+            <div class="col-12 col-lg-10">
                 <div class="d-flex align-items-center mb-4">
                     <button
                         class="btn btn-link text-dark p-0 me-3"

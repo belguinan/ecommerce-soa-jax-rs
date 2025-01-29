@@ -8,7 +8,7 @@ const { fetchJson } = useFetch()
 
 export function useCart() {
     const cartItemCount = computed(() => {
-        return cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+        return cartItems.value.length
     })
 
     async function loadCart() {

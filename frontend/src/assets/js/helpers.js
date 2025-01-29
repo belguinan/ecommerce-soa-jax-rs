@@ -16,6 +16,12 @@ export const cartApiEndpoint = (endpoint) => {
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 
+export const orderApiEndpoint = (endpoint) => {
+    const url = import.meta.env.VITE_ORDER_API_ENDPOINT;
+    endpoint = String(endpoint);
+    return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
+}
+
 export const setLocalStorage = (key, value) => {
     localStorage.setItem(key, JSON.stringify(value));
 }

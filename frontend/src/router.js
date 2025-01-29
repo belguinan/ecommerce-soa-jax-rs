@@ -69,6 +69,25 @@ const routes = [
                     title: 'Checkout'
                 }
             },
+            
+            {
+                path: '/order/:id',
+                name: 'order.show',
+                component: () => import('@/views/Order/Show.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'View order'
+                }
+            },
+            {
+                path: '/order',
+                name: 'order.index',
+                component: () => import('@/views/Order/Index.vue'),
+                meta: {
+                    requiresAuth: true,
+                    title: 'Orders'
+                }
+            },
         ]
     },
 

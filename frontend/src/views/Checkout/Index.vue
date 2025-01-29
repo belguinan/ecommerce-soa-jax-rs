@@ -5,6 +5,7 @@ import { useCart } from '@/composables/useCart'
 import { useSwal } from "@/composables/useSwal"
 import { useFetch } from "@/composables/useFetch"
 import { formatPrice, getLocalStorage } from '@/assets/js/helpers'
+import { orderApiEndpoint } from '../../assets/js/helpers'
 
 const router = useRouter()
 const { cartItems, total: cartTotal } = useCart()
@@ -86,18 +87,18 @@ async function handleConfirmOrder() {
     
     loading.value = true
     document.body.loader().show()
-
+    
     try {
-        // const response = await fetchJson(orderApiEndpoint(), {
-        //     method: 'POST',
-        //     body: {
-        //         items: cartItems.value,
-        //         total: total.value
-        //     }
-        // })
+        const response = await fetchJson(orderApiEndpoint('/checkout'), {
+            method: 'POST',
+            body: form.value
+        })
 
-        // await successAlert('Order placed successfully!')
-        // router.push({ name: 'home' })
+        document.body.loader().hide()
+        await successAlert('Order placed successfully!')
+        
+        router.push({name: 'order.show', params: {id: response.id}})
+        
     } catch (err) {
         errorAlert('Failed to place order')
         console.error(err)
@@ -108,7 +109,7 @@ async function handleConfirmOrder() {
 }
 
 function handleCancel() {
-    // router.back()
+    router.back()
 }
 
 watch(cartItems, newValue => {
@@ -129,7 +130,7 @@ onMounted(() => {
 <template>
     <div class="container py-4 min-vh-100">
         <div class="row justify-content-center">
-            <div class="col-12">
+            <div class="col-12 col-lg-10">
                 <div class="d-flex align-items-center mb-4">
                     <button class="btn btn-link text-dark p-0 me-3" @click="handleCancel">
                         <i class="bi bi-arrow-left fs-4"></i>

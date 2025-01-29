@@ -48,18 +48,15 @@ onMounted(() => {
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg bg-body">
+    <nav class="navbar navbar-expand-lg bg-body d-print-none">
         <div class="container">
-            <router-link class="navbar-brand align-items-center justify-content-center d-flex" :to="{ name: 'home' }">
-                <ApplicationLogo class="img-fluid max-w-25px" />
-            </router-link>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav mx-auto my-2">
                     <li class="nav-item fw-semibold mx-2">
                         <router-link class="nav-link" :to="{ name: 'home' }">
                             <i class="bi bi-house me-2 font-size-1-2rem"></i> Home
@@ -75,7 +72,7 @@ onMounted(() => {
                             <span
                                 v-if="cartItemCount > 0"
                                 class="position-absolute translate-middle badge rounded-4 bg-danger bg-opacity-75"
-                                style="top: 8px; right: -18px;"
+                                style="top: 5px; right: -20px;"
                             >
                                 {{ cartItemCount }}
                             </span>
@@ -85,6 +82,12 @@ onMounted(() => {
                         <router-link class="nav-link" :to="{ name: 'profile.edit' }">
                             <i class="bi bi-person me-2 font-size-1-2rem"></i>
                             Profile
+                        </router-link>
+                    </li>
+                    <li class="nav-item fw-semibold mx-2">
+                        <router-link class="nav-link" :to="{ name: 'order.index' }">
+                            <i class="bi bi-box me-2 font-size-1-2rem"></i>
+                            Orders
                         </router-link>
                     </li>
                     <li class="nav-item fw-semibold mx-2">
