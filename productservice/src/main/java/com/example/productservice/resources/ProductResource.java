@@ -26,10 +26,8 @@ public class ProductResource implements ProductResourceContract {
         String type,
         String sellerId
     ) {
-        PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
-
         FilterRequest filterRequest = new FilterRequest(type, sellerId);
-
+        PaginationParams params = new PaginationParams(page, perPage, sortBy, sortOrder);
         return Response.ok(this.productService.index(params, filterRequest)).build();
     }
 

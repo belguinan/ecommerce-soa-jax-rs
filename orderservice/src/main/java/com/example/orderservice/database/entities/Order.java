@@ -1,6 +1,6 @@
-package com.example.cartservice.database.entities;
+package com.example.orderservice.database.entities;
 
-import com.example.cartservice.enums.OrderStatus;
+import com.example.orderservice.enums.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
