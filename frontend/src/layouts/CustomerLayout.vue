@@ -24,7 +24,6 @@ async function handleLogout() {
     } catch (e) {}
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.removeItem('cart')
     router.push({ name: 'login' })
 }
 

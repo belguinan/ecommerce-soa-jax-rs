@@ -36,6 +36,8 @@ public class ProductService implements ProductServiceContract {
     public Page<Product> index(PaginationParams params, FilterRequest filterRequest) {
         PaginationFactory<Product> paginationFactory = new PaginationFactory<>(this.productRepository);
 
+        this.authContext.getCurrentUserId();
+
         // Do not allow customer to filter by other seller ids.
         if (filterRequest.getSellerId() != null) {
             filterRequest.setSellerId(String.valueOf(this.authContext.getCurrentUserId()));

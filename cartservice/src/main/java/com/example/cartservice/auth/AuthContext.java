@@ -16,6 +16,18 @@ public class AuthContext {
     }
 
     public Long getCurrentUserId() {
+        Claims claims = this.getStoredClaims();
+        Long userId = Long.valueOf(claims.get("userId").toString().split(":")[0]);
+        return userId;
+    }
+
+    public boolean isSuperAdmin() {
+        Claims claims = this.getStoredClaims();
+        return String.valueOf(claims.get("userId").toString().split(":")[1]).equals("admin");
+    }
+
+    private Claims getStoredClaims()
+    {
         var requestContext = JerseyRequestContextFilter.getCurrentContext();
         if (requestContext == null) {
             throw new IllegalStateException("Request context not available");
@@ -27,8 +39,6 @@ public class AuthContext {
         }
 
         String token = authHeader.substring("Bearer ".length()).trim();
-        Claims claims = this.jwtService.validateToken(token);
-
-        return Long.valueOf(claims.get("userId").toString());
+        return this.jwtService.validateToken(token);
     }
 }

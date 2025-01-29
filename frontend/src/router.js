@@ -92,6 +92,22 @@ const routes = [
     },
 
     {
+        path: '/stats',
+        component: () => import('@/layouts/AdminLayout.vue'),
+        children: [
+            {
+                path: '/stats',
+                name: 'stats.index',
+                component: () => import('@/views/Stats/Index.vue'),
+                meta: {
+                    requiresSuperAdmin: true,
+                    title: 'Stats'
+                }
+            },
+        ]
+    },
+
+    {
         path: '/',
         component: () => import('@/layouts/GuestLayout.vue'),
         children: [
@@ -115,6 +131,7 @@ const routes = [
             },
         ]
     },
+    
     {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
@@ -137,6 +154,15 @@ router.beforeEach((to, from, next) => {
     const token = getLocalStorage('token');
     const user = getLocalStorage('user');
 
+    if (to.meta?.requiresSuperAdmin && (!token || !user?.isSuperAdmin)) {
+        next({ name: 'login' });
+        return;
+    }
+
+    if (to.meta?.requiresAuth && user?.isSuperAdmin && to.name !== 'stats.index') {
+        next({ name: 'stats.index' });
+    }
+    
     if (to.meta.requiresAuth && (!token || !user)) {
         next({ name: 'login' });
         return;

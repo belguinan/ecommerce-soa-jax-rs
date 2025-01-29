@@ -22,6 +22,12 @@ export const orderApiEndpoint = (endpoint) => {
     return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
 }
 
+export const statsApiEndpoint = (endpoint) => {
+    const url = import.meta.env.VITE_STATS_API_ENDPOINT;
+    endpoint = String(endpoint);
+    return url + (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint)
+}
+
 export const setLocalStorage = (key, value) => {
     localStorage.setItem(key, JSON.stringify(value));
 }

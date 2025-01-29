@@ -144,28 +144,32 @@ onUnmounted(() => {
                         </div>
                     </div>
 
+                </div>
 
-                    <div v-if="cartItems.length > 0" class="p-3">
+                <div class="modal-footer border-top-0 d-flex flex-row align-items-center justify-content-between" v-if="cartItems.length > 0">
+
+                    <div>
                         <div class="d-flex justify-content-end align-items-center">
-                            <h5 class="mb-0 px-3 py-2 bg-body border rounded-3">
-                                <span class="fw-semibold">Total:</span> <span class="fw-bold">{{ formatPrice(total) }}</span>
+                            <h5 class="mb-0 px-2">
+                                <i class="bi bi-calculator me-2"></i>
+                                <span class="fw-semibold">Total:</span> <span class="ms-1 fw-bold">{{ formatPrice(total) }}</span>
                             </h5>
                         </div>
                     </div>
-                </div>
+                    
+                    <div>
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            @click="showCartModal = false"
+                        >
+                            Continue Shopping
+                        </button>
 
-                <div class="modal-footer border-top-0" v-if="cartItems.length > 0">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        @click="showCartModal = false"
-                    >
-                        Continue Shopping
-                    </button>
-
-                    <router-link :to="{name: 'checkout.index'}" class="btn btn-primary" @click="showCartModal = false">
-                        Checkout
-                    </router-link>
+                        <router-link :to="{name: 'checkout.index'}" class="btn btn-primary" @click="showCartModal = false">
+                            Checkout
+                        </router-link>
+                    </div>
                     
                 </div>
             </div>

@@ -22,6 +22,7 @@ const form = ref({
 })
 
 const loading = ref(false)
+const isCompleted = ref(false)
 const errorResponse = ref({})
 
 const subtotal = computed(() => {
@@ -96,7 +97,10 @@ async function handleConfirmOrder() {
 
         document.body.loader().hide()
         await successAlert('Order placed successfully!')
-        
+
+        isCompleted.value = true;
+        cartItems.value = []
+
         router.push({name: 'order.show', params: {id: response.id}})
         
     } catch (err) {
@@ -113,7 +117,7 @@ function handleCancel() {
 }
 
 watch(cartItems, newValue => {
-    if (newValue.length === 0) {
+    if (!isCompleted.value && newValue.length === 0) {
         router.push({ name: 'home' })
     }
 })

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.DefaultValue;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -35,6 +36,9 @@ public class User {
     @NotEmpty
     @Length(min = 2, max = 199)
     private String name;
+
+    @Column(nullable = true)
+    private Boolean isSuperAdmin;
 
     @NotEmpty
     @Email

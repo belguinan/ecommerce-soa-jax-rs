@@ -1,6 +1,7 @@
 package com.example.userservice.services;
 
 import com.example.userservice.auth.AuthContext;
+import com.example.userservice.auth.Authenticated;
 import com.example.userservice.auth.JerseyRequestContextFilter;
 import com.example.userservice.auth.JwtService;
 import com.example.userservice.contracts.UserServiceContract;
@@ -8,14 +9,12 @@ import com.example.userservice.database.entities.User;
 import com.example.userservice.database.repositories.UserRepository;
 import com.example.userservice.requests.LoginRequest;
 import jakarta.ws.rs.core.HttpHeaders;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class UserService implements UserServiceContract {
 
@@ -46,6 +45,8 @@ public class UserService implements UserServiceContract {
         if (this.userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
         }
+
+        user.setIsSuperAdmin(false);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
     }
@@ -56,11 +57,9 @@ public class UserService implements UserServiceContract {
             .filter(user -> this.passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             .map(user -> {
                 String token = this.jwtService.generateToken(user);
-
                 HashMap<String, Object> result = new HashMap<>();
                 result.put("token", token);
                 result.put("user", user);
-
                 return result;
             });
     }
@@ -79,10 +78,6 @@ public class UserService implements UserServiceContract {
         if (user.getPassword() != null) {
             dbUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
         }
-
-        // Prevent user from updating it's username and email.
-        dbUser.setUsername(dbUser.getUsername());
-        dbUser.setEmail(dbUser.getEmail());
 
         return this.userRepository.save(dbUser);
     }

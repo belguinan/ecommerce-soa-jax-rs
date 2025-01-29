@@ -38,6 +38,14 @@ const handleLogin = async () => {
         if (response.token) {
             setLocalStorage('token', response.token);
             setLocalStorage('user', response.user);
+        }
+
+        if (response.user?.isSuperAdmin) {
+            router.push({ name: 'stats.index' });
+            return;
+        }
+
+        if (response.token) {
             router.push({ name: 'home' });
             return;
         }

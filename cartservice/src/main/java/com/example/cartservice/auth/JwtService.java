@@ -1,14 +1,26 @@
 package com.example.cartservice.auth;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
+import io.jsonwebtoken.security.Keys;
 import jakarta.ws.rs.NotAuthorizedException;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.annotation.JSONP;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class JwtService {
+    private static final long EXPIRATION_TIME = 60 * 60 * 24 * 7;
     private static final String TOKEN_PREFIX = "jwt_token:";
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final RedisTemplate<String, Object> redisTemplate;
 
     public JwtService(RedisTemplate<String, Object> redisTemplate) {
@@ -24,7 +36,7 @@ public class JwtService {
         }
 
         Claims claims = new DefaultClaims();
-        claims.put("userId", Long.valueOf(userInfo.toString()));
+        claims.put("userId", userInfo.toString());
 
         return claims;
     }

@@ -34,6 +34,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         try {
             jwtService.validateToken(token);
         } catch (Exception e) {
+            System.out.println(e);
             throw new NotAuthorizedException("Invalid token", e);
         }
     }
