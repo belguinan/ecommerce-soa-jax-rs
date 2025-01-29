@@ -1,0 +1,107 @@
+# E-Commerce Application
+
+A basic e-commerce platform built with JAX-RS (Jersey), Vue.js, and PostgreSQL.
+
+## Prerequisites
+
+- JDK 23
+- Node.js 18+ and npm
+- PostgreSQL 15+
+- Gradle 8.5+
+
+## Setup Instructions
+
+### 1. PostgreSQL Setup
+1. Download and install PostgreSQL from [PostgreSQL Downloads](https://www.postgresql.org/download/windows/)
+2. During installation:
+   - Remember your password
+   - Default port: 5432
+3. Create database:
+   - Open SQL Shell (psql) from Start Menu
+
+```sql
+CREATE DATABASE {your_database_name};
+```
+
+### 2. IntelliJ IDEA Setup
+   - Open IntelliJ
+   - File → Open → Select project folder
+   - Wait for Gradle sync to complete
+
+### 3. Application Configuration
+
+Create `application.properties` in `src/main/resources/`:
+```properties
+spring.application.name={microservice_name}
+server.port=8088
+
+spring.jpa.show-sql=true
+
+spring.jpa.database=postgresql
+spring.datasource.url=jdbc:postgresql://localhost:5432/{your_database_name}
+spring.datasource.username={your_username}
+spring.datasource.password={your_password}
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=update
+
+logging.level.org.springframework.cache=TRACE
+
+spring.redis.host=localhost
+spring.redis.port=6379
+spring.redis.timeout=2000
+```
+
+### 4. Running the Backend
+1. Open project in IntelliJ
+2. Find `DemoApplication.java`
+3. Click the green play button or right-click → Run
+
+### 5. Frontend Setup
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+## API Endpoints - Microservices Structure
+
+### User Service (Port: 8080 = server.port in application.properties)
+Handles user authentication and management
+```http
+POST /api/v1/user/register
+POST /api/v1/user/login
+GET  /api/v1/user/profile
+PUT  /api/v1/user/profile
+```
+
+### Product Service (Port: 8081)
+Manages product catalog and inventory
+```http
+GET    /api/v1/product
+POST   /api/v1/product
+PUT    /api/v1/product/{id}
+DELETE /api/v1/product/{id}
+```
+
+### Order Service (Port: 8082)
+Handles order processing and management
+```http
+GET    /api/v1/order
+POST   /api/v1/order
+GET    /api/v1/order/{id}
+GET    /api/v1/order/self
+```
+
+### Stats Service (Port: 8083)
+Provides analytics and statistics
+```http
+GET /api/v1/stats/dashboard?interval=week
+GET /api/v1/stats/sales?interval=week
+GET /api/v1/stats/products?interval=week
+GET /api/v1/stats/users?interval=week
+```
