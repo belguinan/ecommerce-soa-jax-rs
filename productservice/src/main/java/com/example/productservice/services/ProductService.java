@@ -10,6 +10,7 @@ import com.example.productservice.pagination.Page;
 import com.example.productservice.pagination.PaginationFactory;
 import com.example.productservice.pagination.PaginationParams;
 import com.example.productservice.requests.FilterRequest;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,14 @@ public class ProductService implements ProductServiceContract {
 
         this.productRepository.delete(dbProduct);
         return true;
+    }
+
+    @Transactional
+    public void updateStock(Long productId, Integer quantity) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
 }

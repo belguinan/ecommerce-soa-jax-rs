@@ -6,6 +6,7 @@ import com.example.orderservice.auth.JerseyRequestContextFilter;
 import com.example.orderservice.errors.GlobalExceptionMapper;
 import com.example.orderservice.errors.ValidationExceptionMapper;
 import com.example.orderservice.auth.AuthenticationFilter;
+import com.example.orderservice.producers.EventProducer;
 import com.example.orderservice.resources.OrderResource;
 import jakarta.ws.rs.ApplicationPath;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -22,5 +23,6 @@ public class JerseyConfig extends ResourceConfig {
         this.register(GlobalExceptionMapper.class);
         this.register(AuthContext.class);
         this.register(JerseyRequestContextFilter.class);
+        this.register(EventProducer.class);
     }
 }

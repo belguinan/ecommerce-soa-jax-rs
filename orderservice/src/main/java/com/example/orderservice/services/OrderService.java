@@ -9,10 +9,12 @@ import com.example.orderservice.database.repositories.OrderRepository;
 import com.example.orderservice.database.repositories.OrderItemRepository;
 import com.example.orderservice.database.repositories.ProductRepository;
 import com.example.orderservice.enums.OrderStatus;
+import com.example.orderservice.events.OrderCompletedEvent;
 import com.example.orderservice.helpers.SpecificationFactory;
 import com.example.orderservice.pagination.Page;
 import com.example.orderservice.pagination.PaginationFactory;
 import com.example.orderservice.pagination.PaginationParams;
+import com.example.orderservice.producers.EventProducer;
 import com.example.orderservice.requests.CheckoutRequest;
 import com.example.orderservice.requests.FilterRequest;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.BadRequestException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +35,20 @@ public class OrderService implements OrderServiceContract {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final AuthContext authContext;
+    private final EventProducer eventProducer;
 
     public OrderService(
         OrderRepository orderRepository,
         OrderItemRepository orderItemRepository,
         ProductRepository productRepository,
-        AuthContext authContext
+        AuthContext authContext,
+        EventProducer eventProducer
     ) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
         this.authContext = authContext;
+        this.eventProducer = eventProducer;
     }
 
     @Override
@@ -84,17 +90,22 @@ public class OrderService implements OrderServiceContract {
                 throw new BadRequestException("Insufficient stock for product: " + product.getName());
             }
 
-            product.setStock(product.getStock() - item.getQuantity());
             this.productRepository.save(product);
         }
 
         // Update order details
         dbOrder.setStatus(OrderStatus.COMPLETED);
+        dbOrder.setCompletedAt(LocalDateTime.now());
         dbOrder.setAddress(request.getAddress());
         dbOrder.setName(request.getName());
         dbOrder.setPhoneNumber(request.getPhoneNumber());
         dbOrder.setCity(request.getCity());
         dbOrder.recalculateTotal();
+
+        // Dispatch order completed event
+        this.eventProducer.dispatch(
+            OrderCompletedEvent.from(dbOrder)
+        );
 
         return this.orderRepository.save(dbOrder);
     }

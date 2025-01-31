@@ -132,7 +132,7 @@ onMounted(() => {
                                                <div>
                                                    <h6 class="mb-1">Order #{{ order.id }}</h6>
                                                    <div class="text-muted small">
-                                                       {{ new Date(order.createdAt).toLocaleDateString() }}
+                                                       {{ new Date(order.completedAt).toLocaleDateString() }}
                                                    </div>
                                                </div>
                                            </div>

@@ -65,6 +65,9 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
     public void addItem(OrderItem item) {
         if (items == null) {
             items = new ArrayList<>();
