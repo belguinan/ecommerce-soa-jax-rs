@@ -35,7 +35,7 @@ services:
     depends_on:
       - kafka
     ports:
-      - "8090:8080"
+      - "8080:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
@@ -43,6 +43,24 @@ services:
     networks:
       - kafka-net
 
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: test_database
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kafka-net
+
 networks:
   kafka-net:
     driver: bridge
+
+volumes:
+  postgres_data:
