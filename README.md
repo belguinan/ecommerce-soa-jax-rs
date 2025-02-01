@@ -7,6 +7,11 @@ Work done by:
 - Nizar Rami
 - Id Ali Aberrazzaq
 
+## 🎥 Demo
+
+[![Watch Demo Video](https://i.ibb.co/35g5KvVf/Screenshot-2025-02-01-at-22-49-32.png)](https://www.loom.com/share/497302b5e3044290aa7984e9df769819)
+
+
 ## Prerequisites
 
 - JDK 23
@@ -17,10 +22,9 @@ Work done by:
 ## Setup Instructions
 
 ### 1. Docker Environment Setup
-1. Install Docker from [Docker's Official Website](https://www.docker.com/products/docker-desktop/)
-2. Start Docker Desktop
-3. Clone the repository and navigate to project directory
-4. Start the infrastructure services:
+1. Start Docker Desktop
+2. Clone the repository and navigate to project directory
+3. Start the infrastructure services:
 ```bash
 docker-compose up -d
 ```
