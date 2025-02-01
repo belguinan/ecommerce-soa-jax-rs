@@ -1,22 +1,21 @@
 <script setup>
 import { onMounted, computed } from 'vue'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
-import { Line } from 'vue-chartjs'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js'
+import { Line, Bar } from 'vue-chartjs'
 import { useStats } from '@/composables/useStats'
 import { useSwal } from "@/composables/useSwal"
 import { formatPrice } from "@/assets/js/helpers"
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
 
 const { errorAlert } = useSwal()
-const { 
-    loading, 
-    interval, 
-    dashboardStats, 
-    salesStats, 
-    productsStats, 
-    usersStats, 
-    fetchStats 
+const {
+    interval,
+    dashboardStats,
+    salesStats,
+    productsStats,
+    usersStats,
+    fetchStats
 } = useStats()
 
 async function handleIntervalChange(newInterval) {
@@ -29,20 +28,29 @@ async function handleIntervalChange(newInterval) {
 }
 
 const chartData = computed(() => ({
-    labels: salesStats.value?.timeSeries?.map(item => 
-        new Date(item.date).toLocaleDateString()
+    labels: salesStats.value?.map(item =>
+        new Date(item.createdAt).toLocaleDateString()
     ) || [],
     datasets: [
         {
             label: 'Sales',
             borderColor: '#202020',
-            data: salesStats.value?.timeSeries?.map(item => item.totalSales) || [],
+            backgroundColor: '#202020',
+            data: salesStats.value?.map(item => item.totalSales) || [],
             tension: 0.3
         },
         {
             label: 'Orders',
             borderColor: '#a300c0',
-            data: salesStats.value?.timeSeries?.map(item => item.ordersCount) || [],
+            backgroundColor: '#a300c0',
+            data: salesStats.value?.map(item => item.totalOrders) || [],
+            tension: 0.3
+        },
+        {
+            label: 'Products Qty',
+            borderColor: '#fac10a',
+            backgroundColor: '#fac10a',
+            data: salesStats.value?.map(item => item.totalProducts) || [],
             tension: 0.3
         }
     ]
@@ -76,7 +84,6 @@ onMounted(async () => {
     <div class="container py-4 min-vh-100">
         <div class="row justify-content-center">
             <div class="col-12">
-
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="d-flex align-items-center">
                         <button class="btn btn-link text-dark p-0 me-3" @click="$router.back()">
@@ -84,26 +91,25 @@ onMounted(async () => {
                         </button>
                         <h1 class="h3 mb-0">Dashboard</h1>
                     </div>
-                    
+
                     <div class="btn-group">
-                        <button 
-                            v-for="option in ['today', 'week', 'month']" 
+                        <button
+                            v-for="option in ['day', 'week', 'month']"
                             :key="option"
                             @click="handleIntervalChange(option)"
                             class="btn"
                             :class="interval === option ? 'btn-dark' : 'btn-outline-dark'"
                         >
-                            {{ 
-                                option === 'today' ? "Today" : 
-                                option === 'week' ? 'Week' : 'Month' 
+                            {{
+                                option === 'day' ? "Today" :
+                                option === 'week' ? 'Week' : 'Month'
                             }}
                         </button>
                     </div>
                 </div>
 
-
                 <div class="row g-4 mb-4">
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white d-flex flex-row flex-nowrap">
                             <div class="bg-opacity-10 p-3 w-50 h-100 d-flex align-center justify-content-center" style="background-color: rgb(246 241 255);">
                                 <i class="bi bi-cart text-primary my-auto fs-3"></i>
@@ -111,13 +117,13 @@ onMounted(async () => {
                             <div class="card-body p-4 d-flex align-items-center w-100 h-100">
                                 <div class="d-flex flex-column mx-auto">
                                     <h6 class="card-title mb-2">Orders</h6>
-                                    <h3 class="mb-0 text-center">{{ dashboardStats?.ordersCount || 0 }}</h3>
+                                    <h3 class="mb-0 text-center">{{ dashboardStats?.totalOrders || 0 }}</h3>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white d-flex flex-row flex-nowrap">
                             <div class="bg-success bg-opacity-10 p-3 w-50 h-100 d-flex align-center justify-content-center">
                                 <i class="bi bi-currency-dollar text-primary my-auto fs-3"></i>
@@ -131,22 +137,7 @@ onMounted(async () => {
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white d-flex flex-row flex-nowrap">
-                            <div class="bg-body bg-opacity-10 p-3 w-50 h-100 d-flex align-center justify-content-center">
-                                <i class="bi bi-people text-purple my-auto fs-3"></i>
-                            </div>
-                            <div class="card-body p-4 d-flex align-items-center w-100 h-100">
-                                <div class="d-flex flex-column mx-auto">
-                                    <h6 class="card-title mb-2">Users</h6>
-                                    <h3 class="mb-0 text-center">{{ dashboardStats?.usersCount || 0 }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-3">
-
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 bg-white d-flex flex-row flex-nowrap">
                             <div class="bg-warning bg-opacity-10 p-3 w-50 h-100 d-flex align-center justify-content-center">
                                 <i class="bi bi-box text-warning my-auto fs-3"></i>
@@ -154,11 +145,10 @@ onMounted(async () => {
                             <div class="card-body p-4 d-flex align-items-center w-100 h-100">
                                 <div class="d-flex flex-column mx-auto">
                                     <h6 class="card-title mb-2">Products Sold</h6>
-                                    <h3 class="mb-0 text-center">{{ dashboardStats?.productsSoldCount || 0 }}</h3>
+                                    <h3 class="mb-0 text-center">{{ dashboardStats?.totalProducts || 0 }}</h3>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -166,7 +156,8 @@ onMounted(async () => {
                     <div class="card-body p-4">
                         <h5 class="card-title mb-4">Sales Overview</h5>
                         <div style="height: 400px">
-                            <Line 
+                            <component
+                                :is="interval === 'day' ? Bar : Line"
                                 :data="chartData"
                                 :options="chartOptions"
                             />
@@ -189,12 +180,11 @@ onMounted(async () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="product in productsStats?.topProducts" :key="product.id">
+                                            <tr v-for="product in productsStats" :key="product.productId">
                                                 <td>
-                                                    <div class="fw-semibold">{{ product.name }}</div>
-                                                    <small class="text-muted">{{ product.type }}</small>
+                                                    <div class="fw-semibold">{{ product.productName }}</div>
                                                 </td>
-                                                <td class="text-end">{{ product.itemsSold }}</td>
+                                                <td class="text-end">{{ product.totalQuantity }}</td>
                                                 <td class="text-end">{{ formatPrice(product.totalSales) }}</td>
                                             </tr>
                                         </tbody>
@@ -218,12 +208,12 @@ onMounted(async () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="user in usersStats?.topUsers" :key="user.id">
+                                            <tr v-for="user in usersStats" :key="user.userId">
                                                 <td>
-                                                    <div class="fw-semibold">{{ user.username }}</div>
+                                                    <div class="fw-semibold">{{ user.userName }}</div>
                                                 </td>
-                                                <td class="text-end">{{ user.ordersCount }}</td>
-                                                <td class="text-end">{{ formatPrice(user.totalSpent) }}</td>
+                                                <td class="text-end">{{ user.totalOrders }}</td>
+                                                <td class="text-end">{{ formatPrice(user.totalSales) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

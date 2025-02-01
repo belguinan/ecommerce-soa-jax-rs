@@ -17,24 +17,24 @@ public interface StatsResourceContract {
     @GET
     @Path("/dashboard")
     Response dashboard(
-        @QueryParam("interval") @Pattern(regexp = "^(today|week|month)$", message = "Invalid interval value.") String interval
+        @QueryParam("interval") @Pattern(regexp = "^(day|week|month)$", message = "Invalid interval value.") String interval
     );
 
     @GET
     @Path("/sales")
     Response sales(
-        @QueryParam("interval") @Pattern(regexp = "^(today|week|month)$", message = "Invalid interval value.") String interval
+        @QueryParam("interval") @Pattern(regexp = "^(day|week|month)$", message = "Invalid interval value.") String interval
     );
 
     @GET
     @Path("/products")
     Response products(
-        @QueryParam("interval") @Pattern(regexp = "^(today|week|month)$", message = "Invalid interval value.") String interval
+        @QueryParam("interval") @Pattern(regexp = "^(day|week|month)$", message = "Invalid interval value.") String interval
     );
 
     @GET
     @Path("/users")
     Response users(
-        @QueryParam("interval") @Pattern(regexp = "^(today|week|month)$", message = "Invalid interval value.") String interval
+        @QueryParam("interval") @Pattern(regexp = "^(day|week|month)$", message = "Invalid interval value.") String interval
     );
 }

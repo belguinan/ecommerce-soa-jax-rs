@@ -94,6 +94,7 @@ public class OrderService implements OrderServiceContract {
         }
 
         // Update order details
+        dbOrder.setUserName(this.authContext.getUsername());
         dbOrder.setStatus(OrderStatus.COMPLETED);
         dbOrder.setCompletedAt(LocalDateTime.now());
         dbOrder.setAddress(request.getAddress());

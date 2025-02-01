@@ -1,4 +1,4 @@
-package com.example.productservice.contracts;
+package com.example.statsservice.contracts;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

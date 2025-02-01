@@ -16,21 +16,21 @@ public class StatsResource implements StatsResourceContract {
 
     @Override
     public Response dashboard(String interval) {
-        return Response.ok(this.orderService.getDashboardStats(interval)).build();
+        return Response.ok(this.orderService.dashboard(interval)).build();
     }
 
     @Override
     public Response sales(String interval) {
-        return Response.ok(this.orderService.getSalesStats(interval)).build();
+        return Response.ok(this.orderService.sales(interval)).build();
     }
 
     @Override
     public Response products(String interval) {
-        return Response.ok(this.orderService.getProductStats(interval)).build();
+        return Response.ok(this.orderService.products(interval)).build();
     }
 
     @Override
     public Response users(String interval) {
-        return Response.ok(this.orderService.getUserStats(interval)).build();
+        return Response.ok(this.orderService.users(interval)).build();
     }
 }

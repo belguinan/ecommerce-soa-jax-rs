@@ -1,6 +1,7 @@
 package com.example.orderservice.database.entities;
 
 import com.example.orderservice.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -29,6 +30,10 @@ public class Order {
     @NotNull
     @Column(nullable = false)
     private Long userId;
+
+    @JsonIgnore
+    @Column(nullable = true)
+    private String userName;
 
     @Column(nullable = true)
     private String name;

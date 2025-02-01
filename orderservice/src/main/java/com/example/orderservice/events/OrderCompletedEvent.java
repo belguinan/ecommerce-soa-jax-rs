@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class OrderCompletedEvent implements EventContract<Order> {
     private Long orderId;
     private Long userId;
+    private String userName;
     private BigDecimal total;
     private LocalDateTime completedAt;
     private List<OrderItemEvent> items;
@@ -29,6 +30,7 @@ public class OrderCompletedEvent implements EventContract<Order> {
     @Data
     public static class OrderItemEvent {
         private Long productId;
+        private String productName;
         private Integer quantity;
         private BigDecimal price;
         private BigDecimal total;
@@ -41,6 +43,7 @@ public class OrderCompletedEvent implements EventContract<Order> {
         event.setOrderId(order.getId());
         event.setUserId(order.getUserId());
         event.setTotal(order.getTotal());
+        event.setUserName(order.getUserName());
         event.setCompletedAt(order.getCompletedAt());
 
         List<OrderCompletedEvent.OrderItemEvent> items = order
@@ -49,6 +52,7 @@ public class OrderCompletedEvent implements EventContract<Order> {
             .map(item -> {
                 OrderCompletedEvent.OrderItemEvent itemEvent = new OrderCompletedEvent.OrderItemEvent();
                 itemEvent.setProductId(item.getProduct().getId());
+                itemEvent.setProductName(item.getProduct().getName());
                 itemEvent.setQuantity(item.getQuantity());
                 itemEvent.setPrice(item.getPrice());
                 itemEvent.setTotal(item.getTotal());

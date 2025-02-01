@@ -1,6 +1,6 @@
 # E-Commerce Application
 
-A basic e-commerce platform built with JAX-RS (Jersey), Vue.js, and PostgreSQL.
+A basic SOA - e-commerce platform built with JAX-RS (Jersey), Vue.js, and PostgreSQL.
 
 ## Prerequisites
 
@@ -94,6 +94,22 @@ docker exec -it postgres psql -U root -d test_database
 docker-compose restart postgres
 ```
 
+## Kafka events
+
+Order and products services:
+
+- **Order Completed Event**
+  - Producer: Order Service
+  - Consumers: Product Service (stock update)
+  - Topic: `order.completed`
+
+Order and stats services
+
+- **Order Completed Event**
+  - Producer: Order Service
+  - Consumers: Stats Service (analytics insert)
+  - Topic: `order.completed`
+
 ## API Endpoints
 
 ### User Service (Port: 8080)
@@ -131,21 +147,3 @@ GET /api/v1/stats/sales?interval=week
 GET /api/v1/stats/products?interval=week
 GET /api/v1/stats/users?interval=week
 ```
-
-## Kafka events
-
-Order and products services:
-
-- **Order Completed Event**
-  - Producer: Order Service
-  - Consumers: Stats Service (analytics)
-  - Topic: `order.completed`
-
-Order and stats services
-
-- **Order Completed Event**
-  - Producer: Order Service
-  - Consumers: Stats Service (analytics)
-  - Topic: `order.completed`
-
-Kafka UI is available at http://localhost:8080 for monitoring events and topics.

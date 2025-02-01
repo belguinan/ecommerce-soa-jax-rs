@@ -31,8 +31,9 @@ public class JwtService {
      */
     public String generateToken(User user) {
 
+        // Added username for order service
         // Needed to add custom role for analytics service
-        String storable = user.getId() + ":" + (user.getIsSuperAdmin() != null && user.getIsSuperAdmin() ? "admin" : "user");
+        String storable = user.getId() + ":" + (user.getIsSuperAdmin() != null && user.getIsSuperAdmin() ? "admin" : "user") + ":" + user.getUsername();
 
         String token = Jwts.builder()
                 .setSubject(user.getUsername())

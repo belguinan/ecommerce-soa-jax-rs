@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.36/5a30490a6e14977d97d9c73c924c1f1b5311ea95/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="statsservice.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cartservice.demo" target="23" />
+      <module name="cartservice.demo.main" target="23" />
+      <module name="cartservice.demo.test" target="23" />
+      <module name="com.example.cartservice" target="23" />
+      <module name="com.example.demo" target="23" />
+      <module name="com.example.demo.main" target="23" />
+      <module name="com.example.demo.test" target="23" />
+      <module name="demo" target="23" />
+      <module name="demo.main" target="23" />
+      <module name="demo.test" target="23" />
+      <module name="orderservice.demo" target="23" />
+      <module name="orderservice.demo.main" target="23" />
+      <module name="orderservice.demo.test" target="23" />
+      <module name="statsservice.demo" target="23" />
+      <module name="statsservice.demo.main" target="23" />
+      <module name="statsservice.demo.test" target="23" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

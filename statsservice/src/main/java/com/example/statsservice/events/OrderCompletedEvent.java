@@ -1,6 +1,7 @@
-package com.example.productservice.events;
+package com.example.statsservice.events;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
