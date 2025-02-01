@@ -2,6 +2,11 @@
 
 A basic SOA - e-commerce platform built with JAX-RS (Jersey), Vue.js, and PostgreSQL.
 
+Work done by: 
+- Noureddine Belguinan
+- Nizar Rami
+- Id Ali Aberrazzaq
+
 ## Prerequisites
 
 - JDK 23
