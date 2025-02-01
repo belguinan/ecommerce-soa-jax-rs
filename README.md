@@ -6,27 +6,30 @@ A basic e-commerce platform built with JAX-RS (Jersey), Vue.js, and PostgreSQL.
 
 - JDK 23
 - Node.js 18+ and npm
-- PostgreSQL 15+
 - Gradle 8.5+
+- Docker and Docker Compose
 
 ## Setup Instructions
 
-### 1. PostgreSQL Setup
-1. Download and install PostgreSQL from [PostgreSQL Downloads](https://www.postgresql.org/download/windows/)
-2. During installation:
-   - Remember your password
-   - Default port: 5432
-3. Create database:
-   - Open SQL Shell (psql) from Start Menu
-
-```sql
-CREATE DATABASE {your_database_name};
+### 1. Docker Environment Setup
+1. Install Docker from [Docker's Official Website](https://www.docker.com/products/docker-desktop/)
+2. Start Docker Desktop
+3. Clone the repository and navigate to project directory
+4. Start the infrastructure services:
+```bash
+docker-compose up -d
 ```
 
+This will start:
+- PostgreSQL (accessible on port 5433)
+- Kafka (port 9092)
+- Zookeeper (port 2181)
+- Kafka UI (port 8080)
+
 ### 2. IntelliJ IDEA Setup
-   - Open IntelliJ
-   - File → Open → Select project folder
-   - Wait for Gradle sync to complete
+- Open IntelliJ
+- File → Open → Select project folder
+- Wait for Gradle sync to complete
 
 ### 3. Application Configuration
 
@@ -38,9 +41,9 @@ server.port=8088
 spring.jpa.show-sql=true
 
 spring.jpa.database=postgresql
-spring.datasource.url=jdbc:postgresql://localhost:5432/{your_database_name}
-spring.datasource.username={your_username}
-spring.datasource.password={your_password}
+spring.datasource.url=jdbc:postgresql://localhost:5433/test_database
+spring.datasource.username=root
+spring.datasource.password=root
 spring.jpa.generate-ddl=true
 spring.jpa.hibernate.ddl-auto=update
 
@@ -49,12 +52,17 @@ logging.level.org.springframework.cache=TRACE
 spring.redis.host=localhost
 spring.redis.port=6379
 spring.redis.timeout=2000
+
+kafka.bootstrap.servers=localhost:9092
+kafka.client.id={service-name}
+kafka.consumer.group={service-name}-group
 ```
 
 ### 4. Running the Backend
-1. Open project in IntelliJ
-2. Find `DemoApplication.java`
-3. Click the green play button or right-click → Run
+1. Ensure Docker containers are running:
+```bash
+docker ps
+```
 
 ### 5. Frontend Setup
 ```bash
@@ -68,9 +76,27 @@ npm install
 npm run dev
 ```
 
-## API Endpoints - Microservices Structure
+## Docker Commands
 
-### User Service (Port: 8080 = server.port in application.properties)
+Common Docker commands for development:
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Stop all services
+docker-compose down
+
+# Access PostgreSQL CLI
+docker exec -it postgres psql -U root -d test_database
+
+# Restart a specific service
+docker-compose restart postgres
+```
+
+## API Endpoints
+
+### User Service (Port: 8080)
 Handles user authentication and management
 ```http
 POST /api/v1/user/register
@@ -105,3 +131,21 @@ GET /api/v1/stats/sales?interval=week
 GET /api/v1/stats/products?interval=week
 GET /api/v1/stats/users?interval=week
 ```
+
+## Kafka events
+
+Order and products services:
+
+- **Order Completed Event**
+  - Producer: Order Service
+  - Consumers: Stats Service (analytics)
+  - Topic: `order.completed`
+
+Order and stats services
+
+- **Order Completed Event**
+  - Producer: Order Service
+  - Consumers: Stats Service (analytics)
+  - Topic: `order.completed`
+
+Kafka UI is available at http://localhost:8080 for monitoring events and topics.
